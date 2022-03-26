@@ -16,8 +16,8 @@
         <a class="navbar-brand" href="#">megabrain3800</a>
         {% if current_user.is_authenticated: %}
             <div class="profile">
-                <img src='{{ url_for("static", filename="img/user-icon.png") }}' class="icon">
-                <a class="navbar-brand" href="/logout">{{ current_user.name }}</a>
+                <img src='{{ url_for("static", filename="img/user-icon.png") }}' href='/logout' class="icon">
+                <a class="navbar-brand" href="/logout">{{ current_user.nickname }}</a>
             </div>
         {% else %}
             <p>
