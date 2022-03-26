@@ -18,6 +18,11 @@ def load_user(user_id):
     return db_sess.query(User).get(user_id)
 
 
+@app.route('/profile')
+def profile():
+    return render_template('profile.html', title='Профиль')
+
+
 @app.route('/logout')
 @login_required
 def logout():
