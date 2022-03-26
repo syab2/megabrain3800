@@ -1,7 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
+    
     <input type="image" src='{{ url_for("static", filename="img/user-icon.png") }}' class="rounded mx-auto d-block" width="100" height="100" id="photo" name="file">
+    <form action="" method="post">
+        <div class="alert alert-danger" role="alert">
+        </div>
+    </form>
     <p class="fixed-bottom text-center">
         <a type="button" class="btn btn-outline-danger" href="/logout">Выйти</a>
     </p>

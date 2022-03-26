@@ -20,6 +20,8 @@ def load_user(user_id):
 
 @app.route('/profile')
 def profile():
+    db_sess = db_session.create_session()
+    info = db_sess.cursor().execute("""SELECT nickname FROM users""").fetchall()
     return render_template('profile.html', title='Профиль')
 
 
