@@ -1,0 +1,6 @@
+a.user-name:active
+a.user-name:hover
+a.user-name {
+    text-decoration: none;
+    color: #000;
+}
