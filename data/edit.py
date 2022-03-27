@@ -8,3 +8,4 @@ from wtforms.validators import DataRequired
 class EditProfile(FlaskForm):
     icon = FileField('Profile picture', validators=[FileRequired(), FileAllowed(['jpg', 'png'], 'Images only!')])
     nickname = StringField('Nickname')
+    submit = SubmitField("Изменить")

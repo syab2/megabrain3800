@@ -1,5 +1,5 @@
 from turtle import title
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, request, url_for
 from flask_login import LoginManager, current_user, login_required, login_user, logout_user
 from werkzeug.utils import secure_filename
 
@@ -26,23 +26,6 @@ def load_user(user_id):
     return db_sess.query(User).get(user_id)
 
 
-@app.route('/edit_profile')
-def edit_profile():
-    form = EditProfile()
-    db_sess = db_session.create_session()
-    user = db_sess.query(User).filter(User.id == current_user.id).first()
-    form.nickname.data = user.nickname
-    if form.validate_on_submit():
-        user.nickname = form.nickname.data
-        filename = str(''.join([str(random.randint(1, 10)) for x in range(5)])) + '_' + str(secure_filename(form.icon.data.filename))
-        form.icon.data.save(f'static/img/{filename}')
-        user.icon = url_for('static', filename=f'img/{filename}')
-        db_sess.merge(current_user) 
-        db_sess.commit()
-        return redirect('/profile')
-    return render_template('edit_profile.html', form=form, title='Редактирование профиля', user=user)
-
-
 @app.route('/profile')
 def profile():
     db_sess = db_session.create_session()
@@ -60,8 +43,9 @@ def logout():
 @app.route('/')
 def index():
     db_sess = db_session.create_session()
-    games = db_sess.query(Game).all()   
-    return render_template('index.html', current_user=current_user, games=games, title='Главная')
+    games = db_sess.query(Game).all() 
+    user = db_sess.query(User).filter(User.id == current_user.id)  
+    return render_template('index.html', user=user, current_user=current_user, games=games, title='Главная')
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -119,6 +103,26 @@ def add_game():
         db_sess.commit()
         return redirect('/')
     return render_template('game_add.html', form=form, title='Добавление игры')
+
+
+@app.route('/edit_profile', methods=["GET", "POST"])
+@login_required
+def edit_profile():
+    form = EditProfile()
+    if request.method == 'GET':     
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter(User.id == current_user.id).first()
+        form.nickname.data = user.nickname
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter(User.id == current_user.id).first()
+        user.nickname = form.nickname.data
+        filename = str(''.join([str(random.randint(1, 10)) for x in range(5)])) + '_' + str(secure_filename(form.icon.data.filename))
+        form.icon.data.save(f'static/img/{filename}')
+        user.icon = url_for('static', filename=f'img/{filename}')
+        db_sess.commit()
+        return redirect('/profile')
+    return render_template('edit_profile.html', form=form, title='Редактирование профиля', user=user)
 
 
 

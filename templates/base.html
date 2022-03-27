@@ -16,7 +16,7 @@
         <a class="navbar-brand" href="/">megabrain3800</a>
         {% if current_user.is_authenticated: %}
             <div class="profile">
-                <img src='{{ url_for("static", filename="img/user-icon.png") }}' style="float: right;" class="icon">
+                <img src='{{ current_user.icon }}' width="48" height="48" style="float: right;" class="icon">
                 <a class='user-name' style="display: flex; text-decoration: none; color: #000; font-size: 20px; justify-content: center; margin-top: 7px; margin-right: 7px;" href="/profile">{{ current_user.nickname }}</a>
             </div>
         {% else %}

@@ -2,6 +2,7 @@
 
 {% block content %}
     <form action="" method="post" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
         <p>
             <img src="{{ user.icon }}" alt="нет картинки брат добавь пж"><br>
             {{ form.icon(type='file', class='form-control-file') }} 
@@ -13,13 +14,15 @@
         </p>
         <p>
             {{ form.nickname.label }}
-            {{ form.nickname('form-control') }}
+            {{ form.nickname(class='form-control') }}
             {% for error in form.nickname.errors %}
                 <p class="alert alert-danger" role="alert">
                     {{ error }}
                 </p>
             {% endfor %}
         </p>
+        <p>{{ form.submit(type='submit', class='btn btn-success') }}</p>
+        {{ message }}
     </form>
     
 

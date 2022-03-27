@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired
 
 
 class GameForm(FlaskForm):
-    icon = FileField('Icon of game', validators=[FileRequired(), FileAllowed(['jpg', 'png'], 'Images only!')])
+    icon = FileField('Icon of game', validators=[FileRequired(), FileAllowed(['jpg', 'png', 'jpeg', 'ico'], 'Images only!')])
     title = StringField('Title', validators=[DataRequired()])
     description = TextAreaField("Description")
     submit = SubmitField('Submit')
