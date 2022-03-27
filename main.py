@@ -1,10 +1,16 @@
 from flask import Flask, render_template, redirect, url_for
 from flask_login import LoginManager, current_user, login_required, login_user, logout_user
+from werkzeug.utils import secure_filename
+
+import random
+
+from data import db_session
+from data.users import User
+from data.games import Game
 
 from forms.login import LoginForm
-from data import db_session
 from forms.register import RegisterForm
-from data.users import User
+from forms.game import GameForm
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -27,7 +33,9 @@ def logout():
 
 @app.route('/')
 def index():
-    return render_template('index.html', current_user=current_user)
+    db_sess = db_session.create_session()
+    games = db_sess.query(Game).all()   
+    return render_template('index.html', current_user=current_user, games=games)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -66,6 +74,26 @@ def login():
                                message="Неправильный логин или пароль",
                                form=form)
     return render_template('login.html', title='Авторизация', form=form)
+
+
+@app.route('/add_game', methods=["GET", "POST"])
+@login_required
+def add_game():
+    form = GameForm()
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        game = Game()
+        game.title = form.title.data
+        game.description = form.description.data
+        filename = str(''.join([str(random.randint(1, 10)) for x in range(5)])) + '_' + str(secure_filename(form.icon.data.filename))
+        form.icon.data.save(f'static/img/{filename}')
+        game.icon = url_for('static', filename=f'img/{filename}')
+        current_user.games.append(game)
+        db_sess.merge(current_user)
+        db_sess.commit()
+        return redirect('/')
+    return render_template('game_add.html', form=form)
+
 
 
 def main():

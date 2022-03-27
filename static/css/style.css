@@ -11,10 +11,10 @@ body {
 }
 
 .game-description {
-    min-width: 850px;
+    min-width: 868px;
 }
 
-.btn {
+button.button {
     position: relative;
     background-color: rgb(30, 109, 255);
     border: none;
