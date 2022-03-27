@@ -1,3 +1,4 @@
+from turtle import title
 from flask import Flask, render_template, redirect, url_for
 from flask_login import LoginManager, current_user, login_required, login_user, logout_user
 from werkzeug.utils import secure_filename
@@ -7,6 +8,7 @@ import random
 from data import db_session
 from data.users import User
 from data.games import Game
+from data.edit import EditProfile
 
 from forms.login import LoginForm
 from forms.register import RegisterForm
@@ -24,6 +26,21 @@ def load_user(user_id):
     return db_sess.query(User).get(user_id)
 
 
+@app.route('/edit_profile')
+def edit_profile():
+    form = EditProfile()
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).filter(User.id == current_user.id).first()
+    return render_template('edit_profile.html', form=form, title='Редактирование профиля', user=user)
+
+
+@app.route('/profile')
+def profile():
+    x = User()
+    print(x.id)
+    return render_template('profile.html', title='Профиль', current_user=current_user)
+
+
 @app.route('/logout')
 @login_required
 def logout():
@@ -35,7 +52,7 @@ def logout():
 def index():
     db_sess = db_session.create_session()
     games = db_sess.query(Game).all()   
-    return render_template('index.html', current_user=current_user, games=games)
+    return render_template('index.html', current_user=current_user, games=games, title='Главная')
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -92,7 +109,7 @@ def add_game():
         db_sess.merge(current_user)
         db_sess.commit()
         return redirect('/')
-    return render_template('game_add.html', form=form)
+    return render_template('game_add.html', form=form, title='Добавление игры')
 
 
 
