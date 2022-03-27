@@ -43,9 +43,12 @@ def logout():
 @app.route('/')
 def index():
     db_sess = db_session.create_session()
-    games = db_sess.query(Game).all() 
-    user = db_sess.query(User).filter(User.id == current_user.id)  
-    return render_template('index.html', user=user, current_user=current_user, games=games, title='Главная')
+    games = db_sess.query(Game).all()
+    try:
+        user = db_sess.query(User).filter(User.id == current_user.id)  
+        return render_template('index.html', user=user, current_user=current_user, games=games, title='Главная')
+    except Exception:
+        return render_template('index.html', current_user=current_user, games=games, title='Главная')
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -120,7 +123,7 @@ def edit_profile():
         filename = str(''.join([str(random.randint(1, 10)) for x in range(5)])) + '_' + str(secure_filename(form.icon.data.filename))
         form.icon.data.save(f'static/img/{filename}')
         user.icon = url_for('static', filename=f'img/{filename}')
-        db_sess.commit()
+        db_sess.commit()        
         return redirect('/profile')
     return render_template('edit_profile.html', form=form, title='Редактирование профиля', user=user)
 
