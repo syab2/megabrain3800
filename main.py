@@ -31,14 +31,23 @@ def edit_profile():
     form = EditProfile()
     db_sess = db_session.create_session()
     user = db_sess.query(User).filter(User.id == current_user.id).first()
+    form.nickname.data = user.nickname
+    if form.validate_on_submit():
+        user.nickname = form.nickname.data
+        filename = str(''.join([str(random.randint(1, 10)) for x in range(5)])) + '_' + str(secure_filename(form.icon.data.filename))
+        form.icon.data.save(f'static/img/{filename}')
+        user.icon = url_for('static', filename=f'img/{filename}')
+        db_sess.merge(current_user) 
+        db_sess.commit()
+        return redirect('/profile')
     return render_template('edit_profile.html', form=form, title='Редактирование профиля', user=user)
 
 
 @app.route('/profile')
 def profile():
-    x = User()
-    print(x.id)
-    return render_template('profile.html', title='Профиль', current_user=current_user)
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).filter(User.id == current_user.id).first()
+    return render_template('profile.html', title='Профиль', user=user)
 
 
 @app.route('/logout')
