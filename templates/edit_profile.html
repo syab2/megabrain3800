@@ -4,7 +4,7 @@
     <form action="" method="post" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         <p>
-            <img src="{{ user.icon }}" alt="нет картинки брат добавь пж"><br>
+            <img src="{{ user.icon }}" alt="нет картинки брат добавь пж" width="100" height="100"><br>
             {{ form.icon(type='file', class='form-control-file') }} 
             {% for error in form.icon.errors %}
                 <p class="alert alert-danger" role="alert">

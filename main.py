@@ -68,6 +68,7 @@ def register():
         user.nickname = form.nickname.data
         user.email = form.email.data
         user.set_password(form.password.data)
+        user.icon = '/static/img/user-icon.png'
         db_sess.add(user)
         db_sess.commit()
         return redirect('/')
