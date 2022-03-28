@@ -96,11 +96,18 @@ def add_game():
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         game = Game()
+
         game.title = form.title.data
         game.description = form.description.data
+
         filename = str(''.join([str(random.randint(1, 10)) for x in range(5)])) + '_' + str(secure_filename(form.icon.data.filename))
         form.icon.data.save(f'static/img/{filename}')
         game.icon = url_for('static', filename=f'img/{filename}')
+
+        filename1 = str(''.join([str(random.randint(1, 10)) for x in range(5)])) + '_' + str(secure_filename(form.archive.data.filename))
+        form.archive.data.save(f'static/games/{filename1}')
+        game.archive = url_for('static', filename=f'games/{filename1}')
+
         current_user.games.append(game)
         db_sess.merge(current_user)
         db_sess.commit()

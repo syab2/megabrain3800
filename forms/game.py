@@ -9,4 +9,5 @@ class GameForm(FlaskForm):
     icon = FileField('Icon of game', validators=[FileRequired(), FileAllowed(['jpg', 'png', 'jpeg', 'ico'], 'Images only!')])
     title = StringField('Title', validators=[DataRequired()])
     description = TextAreaField("Description")
+    archive = FileField('Archive with game', validators=[FileRequired(), FileAllowed(['zip'], 'Archives only!')])
     submit = SubmitField('Submit')
