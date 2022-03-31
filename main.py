@@ -136,6 +136,13 @@ def edit_profile():
     return render_template('edit_profile.html', form=form, title='Редактирование профиля', user=user)
 
 
+@app.route('/game/<int:id>')
+def game_page(id):
+    db_sess = db_session.create_session()
+    game = db_sess.query(Game).filter(Game.id == id).first()
+    author = db_sess.query(User).filter(User.id == game.user_id).first()
+    return render_template('game_page.html', game=game, username=author)
+
 
 def main():
     db_session.global_init('db/mega.db')

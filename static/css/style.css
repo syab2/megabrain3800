@@ -4,9 +4,9 @@ body {
 
 .game-selection {
     display: flex;
-    min-width: 1000px;
-    min-height: 100px;
-    border-radius: 50px;
+    width: 1000px;
+    height: 100px;
+    border-radius: 10px;
     margin: 20px;
     background-color: #fff;
 }
@@ -25,3 +25,21 @@ button.button {
     font-size: 20px;
   }
   
+.page {
+    width: 1109px;
+    height: 931px;
+    background-color: #fff;
+}
+
+img.game-icon {
+    position: relative;
+    border: 2px solid #000;
+    margin-top: 15px;
+    right: 15px;
+}
+
+.download-button {
+    position: relative;
+    text-align: center;
+    margin-top: 50px;
+}
