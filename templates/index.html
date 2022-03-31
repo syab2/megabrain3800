@@ -6,13 +6,15 @@
 {% endif %}
 {% for game in games %}
     <div class="game-selection">
-        <img src="{{ game.icon }}" alt="" style="border: 1px solid #000; border-radius: 5px;" width="100" height="100">      
-        <div class="d-flex flex-column">
-            <div class="game-title">
-                <a class="title" href="game/{{ game.id }}" style="text-decoration: none; color: #000;"><h2>{{ game.title }}</h2></a>
-            </div>
-            <div class="game-description">
-                <p>{{ game.description }}</p>
+        <img src="{{ game.icon }}" alt="" style="border: 1px solid #000; border-radius: 5px;" width="100" height="100">
+        <div class="theme" style="margin-left: 3px;">
+            <div class="d-flex flex-column">
+                <div class="game-title">
+                    <a class="title" href="game/{{ game.id }}" style="text-decoration: none; color: #000;"><h2>{{ game.title }}</h2></a>
+                </div>
+                <div class="game-description">
+                    <p>{{ game.description }}</p>
+                </div>
             </div>
         </div>
         <a class="btn btn-primary" href="{{ game.archive }}" download=""><img src="{{ url_for('static', filename='img/download.png') }}" alt="" style="margin: 18px 12px 0;"></a>

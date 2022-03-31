@@ -1,3 +1,4 @@
+import os
 from turtle import title
 from flask import Flask, render_template, redirect, request, url_for
 from flask_login import LoginManager, current_user, login_required, login_user, logout_user
@@ -94,20 +95,40 @@ def login():
 @login_required
 def add_game():
     form = GameForm()
+    count = 3
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         game = Game()
 
-        game.title = form.title.data
-        game.description = form.description.data
+        game.title = str(form.title.data).strip()
+        game.description = str(form.description.data).strip()
 
-        filename = str(''.join([str(random.randint(1, 10)) for x in range(5)])) + '_' + str(secure_filename(form.icon.data.filename))
-        form.icon.data.save(f'static/img/{filename}')
-        game.icon = url_for('static', filename=f'img/{filename}')
+        os.mkdir(f'static/games/{game.title}')
+        os.mkdir(f'static/games/{game.title}/images')
 
-        filename1 = str(''.join([str(random.randint(1, 10)) for x in range(5)])) + '_' + str(secure_filename(form.archive.data.filename))
-        form.archive.data.save(f'static/games/{filename1}')
-        game.archive = url_for('static', filename=f'games/{filename1}')
+        filename = str(''.join([str(random.randint(1, 9)) for x in range(5)])) + '_' + str(secure_filename(form.icon.data.filename))
+        form.icon.data.save(f'static/games/{game.title}/images/{filename}')
+        game.icon = url_for('static', filename=f'games/{game.title}/images/{filename}')
+
+        filename1 = str(''.join([str(random.randint(1, 9)) for x in range(5)])) + '_' + str(secure_filename(form.archive.data.filename))
+        form.archive.data.save(f'static/games/{game.title}/{filename1}')
+        game.archive = url_for('static', filename=f'games/{game.title}/{filename1}')
+        try:
+            form.slide1.data.save(f'static/games/{game.title}/images/slide1.jpg')
+        except Exception:
+            count -= 1
+
+        try:
+            form.slide2.data.save(f'static/games/{game.title}/images/slide2.jpg')
+        except Exception:
+            count -= 1
+
+        try:
+            form.slide3.data.save(f'static/games/{game.title}/images/slide3.jpg')
+        except Exception:
+            count -= 1
+
+        game.slides = ';'.join([url_for('static', filename=f'games/{game.title}/images/slide{x + 1}.jpg') for x in range(count)])
 
         current_user.games.append(game)
         db_sess.merge(current_user)
